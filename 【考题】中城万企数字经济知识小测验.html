@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中城万企数字经济知识测验</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+      .form-group {
+            margin-bottom: 15px;
+        }
+      .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+      .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+      .question {
+            margin-bottom: 20px;
+        }
+      .choices {
+            margin-left: 20px;
+        }
+      .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+      .button:hover {
+            background-color: #45a049;
+        }
+      .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+      .correct-answer {
+            color: green;
+        }
+      .incorrect-answer {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-info-container">
+        <h2>请输入您的信息</h2>
+        <form id="user-info-form">
+            <div class="form-group">
+                <label for="name">姓名:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="region">地区:</label>
+                <input type="text" id="region" required>
+            </div>
+            <div class="form-group">
+                <label for="department">部门:</label>
+                <input type="text" id="department" required>
+            </div>
+            <button class="button" type="submit">开始答题</button>
+        </form>
+    </div>
+    <div id="quiz-container" style="display: none;">
+        <!-- 问题将通过 JavaScript 动态添加到这里 -->
+    </div>
+    <div id="result-container" style="display: none;">
+        <h2>答题结果</h2>
+        <div id="user-info-display"></div>
+        <div class="result" id="result"></div>
+        <div id="answer-review"></div>
+        <div id="comment"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "中城万企是以下哪个集团旗下专注于县域经济数字化转型的企业？",
+                choices: ["《中国企业报》集团", "阿里巴巴集团", "腾讯集团", "华为技术有限公司"],
+                correctAnswer: "A",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企 GBC 生态平台中的 “G” 代表的是？",
+                choices: ["企业（Business）", "消费者（Consumer）", "政府（Government）", "全球（Global）"],
+                correctAnswer: "C",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "国家超级计算西安中心（县域城市）数字经济创新应用基地主要依靠什么为县域经济提供助力？",
+                choices: ["强大的算力", "丰富的人力资源", "大量的资金投入", "广泛的市场渠道"],
+                correctAnswer: "A",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "北京国际大数据交易所（县域城市）数据要素服务中心的主要功能不包括以下哪一项？",
+                choices: ["数据登记服务", "数据产品交易", "数据安全防护培训", "金融创新服务"],
+                correctAnswer: "C",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（县域城市）数据资产归集合规确权平台通过何种方式实现数据资产的归集和确权？",
+                choices: ["人工手动录入", "与第三方数据公司合作", "数字人民币一码通扫", "政府数据共享"],
+                correctAnswer: "C",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（县域城市）惠民网平台对消费者的主要好处不包括以下哪点？",
+                choices: ["提供便捷购物体验", "保障商品价格实惠", "提供就业岗位培训", "实现消费身份转变与权益升级"],
+                correctAnswer: "C",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（县域城市）产业互联网平台如何助力企业发展？",
+                choices: ["提供免费办公场地", "实现产业链上下游企业互联互通", "直接提供订单资源", "给予税收优惠政策"],
+                correctAnswer: "B",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（县域城市）税源拓展平台的核心目标是？",
+                choices: ["增加县域税收来源", "减少企业税收负担", "规范税收征管流程", "推广税收优惠政策"],
+                correctAnswer: "A",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（企业）智能分账系统有助于企业解决以下哪个问题？",
+                choices: ["员工招聘困难", "生产设备老化", "销售渠道单一", "财务管理复杂"],
+                correctAnswer: "D",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企在数字经济领域的创新举措中，哪一项被称为 “标准制定的领航旗舰者”？",
+                choices: ["超算融合的创新典范者", "携手中智科学技术评价研究中心参与蓝皮书及行业标准制定", "数据交易规则的塑造者", "数字人民币应用的开拓者"],
+                correctAnswer: "B",
+                type: "single",
+                points: 5  // 调整为 100 分制下的分值
+            },
+            {
+                question: "国家政策对数字经济发展的支持体现在以下哪些方面？",
+                choices: ["出台相关规划和意见", "提供资金补贴", "加强基础设施建设", "推动技术创新", "鼓励国际合作"],
+                correctAnswer: ["A", "B", "C", "D", "E"],
+                type: "multiple",
+                points: 10  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企 GBC 生态平台为县域经济发展带来的好处有？",
+                choices: ["为政府提供决策管理工具", "助力企业数字化转型", "提升消费者购物体验", "促进产业结构优化升级", "增强县域经济整体竞争力"],
+                correctAnswer: ["A", "B", "C", "D", "E"],
+                type: "multiple",
+                points: 10  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（县域城市）数据资产归集合规确权平台的作用包括？",
+                choices: ["实现数据资产化流通与收益转化", "保障数据安全合规", "为企业提供数据存储服务", "促进县域经济产业化发展", "提升企业数据管理效率"],
+                correctAnswer: ["A", "B", "D", "E"],
+                type: "multiple",
+                points: 10  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（县域城市）产业互联网平台对企业的积极影响有？",
+                choices: ["降低采购成本", "提高运营效率", "拓展市场渠道", "增强创新能力", "优化供应链管理"],
+                correctAnswer: ["A", "B", "C", "E"],
+                type: "multiple",
+                points: 10  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企（企业）云账户管理系统具备以下哪些功能？",
+                choices: ["大额转账服务", "电子税票管理", "财税合规保障", "智能化账户分析", "企业贷款申请"],
+                correctAnswer: ["A", "B", "C", "D"],
+                type: "multiple",
+                points: 10  // 调整为 100 分制下的分值
+            },
+            {
+                question: "中城万企数字经济 GBC 生态系统八大平台能帮助县域城市实现的数字化赋能功能有？",
+                choices: ["资源管理数据化", "交易结算属地化", "消费税票一体化", "数据应用合规化", "企业上市规模化"],
+                correctAnswer: ["A", "B", "C", "D", "E"],
+                type: "multiple",
+                points: 10  // 调整为 100 分制下的分值
+            }
+        ];
+
+        let userInfoForm = document.getElementById("user-info-form");
+        let quizContainer = document.getElementById("quiz-container");
+        let resultContainer = document.getElementById("result-container");
+        let resultDiv = document.getElementById("result");
+        let answerReviewDiv = document.getElementById("answer-review");
+        let commentDiv = document.getElementById("comment");
+        let userInfoDisplayDiv = document.getElementById("user-info-display");
+        let userAnswers = [];
+
+        userInfoForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let name = document.getElementById("name").value;
+            let region = document.getElementById("region").value;
+            let department = document.getElementById("department").value;
+            document.getElementById("user-info-container").style.display = "none";
+            quizContainer.style.display = "block";
+            renderQuestions();
+            // 存储用户信息
+            userInfoDisplayDiv.innerHTML = `<p><strong>姓名:</strong> ${name}</p><p><strong>地区:</strong> ${region}</p><p><strong>部门:</strong> ${department}</p>`;
+        });
+
+        function renderQuestions() {
+            questions.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
+                let choicesDiv = document.createElement("div");
+                choicesDiv.className = "choices";
+                if (q.type === "single") {
+                    q.choices.forEach((choice, i) => {
+                        choicesDiv.innerHTML += `
+                            <label>
+                                <input type="radio" name="question${index}" value="${String.fromCharCode(65 + i)}">
+                                ${choice}
+                            </label><br>
+                        `;
+                    });
+                } else if (q.type === "multiple") {
+                    q.choices.forEach((choice, i) => {
+                        choicesDiv.innerHTML += `
+                            <label>
+                                <input type="checkbox" name="question${index}" value="${String.fromCharCode(65 + i)}">
+                                ${choice}
+                            </label><br>
+                        `;
+                    });
+                }
+                questionDiv.appendChild(choicesDiv);
+                quizContainer.appendChild(questionDiv);
+            });
+            let submitButton = document.createElement("button");
+            submitButton.className = "button";
+            submitButton.textContent = "提交答案";
+            submitButton.addEventListener("click", submitQuiz);
+            quizContainer.appendChild(submitButton);
+        }
+
+        function submitQuiz() {
+            userAnswers = [];
+            questions.forEach((q, index) => {
+                let answer;
+                if (q.type === "single") {
+                    let selected = document.querySelector(`input[name="question${index}"]:checked`);
+                    answer = selected? selected.value : null;
+                } else if (q.type === "multiple") {
+                    answer = [];
+                    let selected = document.querySelectorAll(`input[name="question${index}"]:checked`);
+                    selected.forEach(sel => answer.push(sel.value));
+                }
+                userAnswers.push(answer);
+            });
+            let score = calculateScore();
+            displayResult(score);
+        }
+
+        function calculateScore() {
+            let score = 0;
+            userAnswers.forEach((userAnswer, index) => {
+                let correctAnswer = questions[index].correctAnswer;
+                if (questions[index].type === "single") {
+                    if (userAnswer === correctAnswer) {
+                        score += questions[index].points;
+                    }
+                } else if (questions[index].type === "multiple") {
+                    let correctSet = new Set(correctAnswer);
+                    let userSet = new Set(userAnswer);
+                    if (arraysEqual([...correctSet], [...userSet])) {
+                        score += questions[index].points;
+                    }
+                }
+            });
+            return score;
+        }
+
+        function arraysEqual(a, b) {
+            if (a === b) return true;
+            if (a == null || b == null) return false;
+            if (a.length!== b.length) return false;
+            for (let i = 0; i < a.length; ++i) {
+                if (a[i]!== b[i]) return false;
+            }
+            return true;
+        }
+
+        function displayResult(score) {
+            quizContainer.style.display = "none";
+            resultContainer.style.display = "block";
+            resultDiv.textContent = `你的总得分是: ${score} 分。`;
+            let totalPoints = questions.reduce((acc, q) => acc + q.points, 0);
+            answerReviewDiv.innerHTML = "";
+            questions.forEach((q, index) => {
+                let answer = userAnswers[index];
+                let correctAnswer = q.correctAnswer;
+                let answerText = answer? answer.join(", ") : "未作答";
+                let correctAnswerText = Array.isArray(correctAnswer)? correctAnswer.join(", ") : correctAnswer;
+                let answerStatus = answer === correctAnswer? "correct-answer" : "incorrect-answer";
+                answerReviewDiv.innerHTML += `
+                    <p><strong>第${index + 1}题:</strong> 你的答案: <span class="${answerStatus}">${answerText}</span>, 正确答案: <span class="correct-answer">${correctAnswerText}</span></p>
+                `;
+            });
+            let comment = generateComment(score, totalPoints);
+            commentDiv.textContent = comment;
+        }
+
+        function generateComment(score, totalPoints) {
+            if (score / totalPoints >= 0.8) {
+                return "非常出色！你对中城万企数字经济的知识掌握得很好，继续保持哦！";
+            } else if (score / totalPoints >= 0.6) {
+                return "表现不错，你对中城万企数字经济有一定的了解，但还有一些细节需要加强，继续加油！";
+            } else if (score / totalPoints >= 0.4) {
+                return "还可以，不过看起来你对中城万企数字经济的某些方面还需要进一步学习，继续努力会有更大的进步。";
+            } else {
+                return "需要加油啦，你对中城万企数字经济的知识掌握还不够扎实，多复习一下相关内容吧。";
+            }
+        }
+    </script>
+</body>
+</html>
